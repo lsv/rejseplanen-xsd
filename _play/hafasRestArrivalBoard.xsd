@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="types.xsd"
+>
+  <xs:element name="Arrival">
+    <xs:annotation>
+      <xs:documentation>
+        The element Arrival contains all information about a arrival like
+        - time
+        - date
+        - stop/station name
+        - track
+        - realtime time date and track
+        - origin
+        - name
+        - type of the journey
+
+        It also contains a reference to journey details.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="common:JourneyDetailRef"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="attlist.Arrival"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ArrivalBoard">
+    <xs:annotation>
+      <xs:documentation>
+        The arrival board lists up to 20 arrivals at a specific stop/station or group of stop/stations.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="20">
+        <xs:element ref="Arrival"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="attlist.ArrivalBoard"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.Arrival">
+    <xs:attribute name="name" use="required" ref="common:board_name" />
+    <xs:attribute name="type" use="required" ref="common:type" />
+    <xs:attribute name="stop" type="xs:string" use="required" ref="common:board_stop" />
+    <xs:attribute name="time" type="xs:string" use="required"  ref="common:time" />
+    <xs:attribute name="date" type="xs:string" use="required" ref="common:date" />
+    <xs:attribute name="track" type="xs:string" ref="common:board_track" />
+    <xs:attribute name="rtTime" type="xs:string" ref="common:rtTime" />
+    <xs:attribute name="rtDate" type="xs:string" ref="common:rtDate" />
+    <xs:attribute name="rtTrack" type="xs:string" ref="common:rtTrack" />
+    <xs:attribute name="origin" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Origin of the journey.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="cancelled" type="xs:boolean" ref="common:board_cancelled" />
+    <xs:attribute name="messages" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation>This attribute gives the number of messages for this journey</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="attlist.ArrivalBoard">
+    <xs:attribute name="error" type="xs:string" ref="common:error" />
+  </xs:attributeGroup>
+</xs:schema>

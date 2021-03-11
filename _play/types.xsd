@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!-- Journey ref -->
+    <xs:element name="JourneyDetailRef">
+        <xs:annotation>
+            <xs:documentation>Reference to journey details.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.JourneyDetailRef"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.JourneyDetailRef">
+        <xs:attribute name="ref" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Contains a URL to call the ReST interface for journey details.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <!-- Transport type -->
+    <xs:attribute name="type">
+        <xs:annotation>
+            <xs:documentation>
+                The attribute type specifies the type of the arriving journey. Valid values are
+                - IC (InterCity)
+                - LYN (Lyntog)
+                - REG (Regionaltog)
+                - S (S-Tog)
+                - TOG (other train)
+                - BUS (Bus)
+                - EXB (Express Buss)
+                - NB (Nattbus)
+                - TB (Telebus, other form of transport)
+                - F (Ferry)
+                - M (Metro)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="IC"/>
+                <xs:enumeration value="LYN"/>
+                <xs:enumeration value="REG"/>
+                <xs:enumeration value="S"/>
+                <xs:enumeration value="TOG"/>
+                <xs:enumeration value="BUS"/>
+                <xs:enumeration value="EXB"/>
+                <xs:enumeration value="NB"/>
+                <xs:enumeration value="TB"/>
+                <xs:enumeration value="F"/>
+                <xs:enumeration value="M"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+
+    <!-- Error attribute -->
+    <xs:attribute name="error" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>
+                If some problem occurs while creating the arrival board you can find an error code here.
+                Note:
+                These error codes are not suitable for end users but only for reporting purposes.
+                Most of the errors do not indicate a system failure but data or request parameter issues.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- Time & Date -->
+    <xs:attribute name="time" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Time in format HH:MM.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="date" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Date in format DD.MM.YY.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="rtTime" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Realtime time in format HH:MM if available.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="rtDate" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Realtime date in format DD.MM.YY, if available.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="rtTrack" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Realtime track information, if available.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- Board elements -->
+    <xs:attribute name="board_name">
+        <xs:annotation>
+            <xs:documentation>The attribute name specifies the name of the departing journey (e.g. "Bus 100").
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="board_stop" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Contains the name of the stop/station.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="board_track" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Track information, if available.</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <xs:attribute name="board_cancelled" type="xs:boolean" default="true">
+        <xs:annotation>
+            <xs:documentation>This attribute gives information whether this journey is cancelled</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+
+    <!-- departure attribute list -->
+    <xs:attributeGroup name="attlist.Departure">
+        <xs:attribute name="name" use="required" ref="board_name"/>
+        <xs:attribute name="type" use="required" ref="type"/>
+        <xs:attribute name="stop" type="xs:string" use="required" ref="board_stop"/>
+        <xs:attribute name="time" type="xs:string" use="required" ref="time"/>
+        <xs:attribute name="date" type="xs:string" use="required" ref="date"/>
+        <xs:attribute name="track" type="xs:string" ref="board_track"/>
+        <xs:attribute name="rtTime" type="xs:string" ref="rtTime"/>
+        <xs:attribute name="rtDate" type="xs:string" ref="rtDate"/>
+        <xs:attribute name="rtTrack" type="xs:string" ref="rtTrack"/>
+        <xs:attribute name="direction" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>Direction information</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cancelled" type="xs:boolean" ref="board_cancelled"/>
+        <xs:attribute name="finalStop" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>This attribute gives the name of the final stop of this journey</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <!-- Stop location -->
+    <xs:element name="StopLocation">
+        <xs:annotation>
+            <xs:documentation>
+                The element StopLocation specifies a stop/station in a result of a location request.
+
+                It contains an output name and an id.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.StopLocation"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attributeGroup name="attlist.StopLocation">
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Contains the output name of this stop or station</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="x" type="xs:int" use="required">
+            <xs:annotation>
+                <xs:documentation>The WGS84 x coordinate as integer (multiplied by 1,000,000)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="y" type="xs:int" use="required">
+            <xs:annotation>
+                <xs:documentation>The WGS84 y coordinate as integer (multiplied by 1,000,000)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="id" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    This ID can either be used as originId or destId to perform a trip request or to call a departure
+                    board.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <!-- Notes -->
+    <xs:element name="Notes">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a text with notes to be displayed for this leg.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.Notes"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attributeGroup name="attlist.Notes">
+        <xs:attribute name="text" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Text to be displayed.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <!-- Messages -->
+    <xs:element name="MessageList">
+        <xs:annotation>
+            <xs:documentation>List of HIM messages</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Message" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>Single HIM message</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Header" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>Contains the header text of a HIM message</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="Text" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>Contains the message text of a HIM message</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="Links" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>List of links for a HIM message</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Link" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>Single link of a HIM message</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:attribute name="url" use="required">
+                                                    <xs:annotation>
+                                                        <xs:documentation>URL for a link</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:attribute>
+                                                <xs:attribute name="text">
+                                                    <xs:annotation>
+                                                        <xs:documentation>Linktext for a link</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:attribute>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Message">
+        <xs:annotation>
+            <xs:documentation>Single HIM message</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Header" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Contains the header text of a HIM message</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Text" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Contains the message text of a HIM message</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Links" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>List of links for a HIM message</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Link" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>Single link of a HIM message</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:attribute name="url" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>URL for a link</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="text">
+                                        <xs:annotation>
+                                            <xs:documentation>Linktext for a link</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Links">
+        <xs:annotation>
+            <xs:documentation>List of links for a HIM message</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Link" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>Single link of a HIM message</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="url" use="required">
+                            <xs:annotation>
+                                <xs:documentation>URL for a link</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="text">
+                            <xs:annotation>
+                                <xs:documentation>Linktext for a link</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Link">
+        <xs:annotation>
+            <xs:documentation>Single link of a HIM message</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="url" use="required">
+                <xs:annotation>
+                    <xs:documentation>URL for a link</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="text">
+                <xs:annotation>
+                    <xs:documentation>Linktext for a link</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:attribute name="url">
+        <xs:annotation>
+            <xs:documentation>URL for a link</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="text">
+        <xs:annotation>
+            <xs:documentation>Linktext for a link</xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+</xs:schema>

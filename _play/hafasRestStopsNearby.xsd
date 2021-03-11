@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="types.xsd"
+>
+    <xs:element name="LocationList">
+        <xs:annotation>
+            <xs:documentation>
+                The location list contains stops/stations with name, id, coordinate and distance (as the crow flies) as
+                a result of a stops nearby request.
+
+                The data of every list entry can be used for further trip or departureBoard requests.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="common:StopLocation"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

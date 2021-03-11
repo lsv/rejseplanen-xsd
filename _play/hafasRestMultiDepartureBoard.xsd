@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:common="types.xsd"
+>
+    <xs:element name="Departure">
+        <xs:annotation>
+            <xs:documentation>
+                The element Departure contains all information about a departure like time, date, stop/station name,
+                track, realtime time, date and track, direction, name and type of the journey.
+
+                It also contains a reference to journey details.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="common:JourneyDetailRef"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="common:attlist.Departure"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MultiDepartureBoard">
+        <xs:annotation>
+            <xs:documentation>
+                The departure board lists up to 20 departures at a specific stop/station or group of stop/stations.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="20">
+                <xs:element ref="Departure"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.MultiDepartureBoard"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attributeGroup name="attlist.MultiDepartureBoard">
+        <xs:attribute name="error" ref="common:error"/>
+    </xs:attributeGroup>
+
+    <xs:element name="LocationList">
+        <xs:annotation>
+            <xs:documentation>
+                The location list contains stops/stations with name, id, coordinate and distance (as the crow flies) as
+                a result of a stops nearby request.
+
+                The data of every list entry can be used for further trip or departureBoard requests.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="common:StopLocation"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

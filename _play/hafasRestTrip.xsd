@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:common="types.xsd"
+>
+    <xs:element name="Destination" type="OriginDestType">
+        <xs:annotation>
+            <xs:documentation>
+                Destination of a leg including
+                - location name
+                - location type
+                - location route index (if available)
+                - arrival time and date
+                - realtime arrival time (if available)
+                - track and realtime track (if available)
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="Leg">
+        <xs:annotation>
+            <xs:documentation>
+                A leg is one part of a trip.
+
+                It can be either a walk, a bike or car ride or (in most cases)
+                a journey by bus, train or some other means of transport.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Origin"/>
+                <xs:element ref="Destination"/>
+                <xs:element ref="Notes" minOccurs="0"/>
+                <xs:element ref="common:JourneyDetailRef" minOccurs="0"/>
+                <xs:element name="MessageList" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.Leg"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Notes" ref="common:Notes"/>
+    <xs:element name="MessageList" minOccurs="0" ref="common:MessageList"/>
+    <xs:element name="Message" maxOccurs="unbounded" ref="common:Message"/>
+
+    <xs:element name="Header" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Contains the header text of a HIM message</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="Text" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>Contains the message text of a HIM message</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Links" minOccurs="0" ref="common:Links"/>
+    <xs:element name="Link" maxOccurs="unbounded" ref="common:Link"/>
+    <xs:attribute name="url" use="required" ref="common:url"/>
+    <xs:attribute name="text" use="optional" ref="common:text"/>
+
+    <xs:element name="Origin" type="OriginDestType">
+        <xs:annotation>
+            <xs:documentation>
+                Origin of a leg including
+                - location name
+                - location type
+                - location route index (if available)
+                - departure time and date
+                - realtime departure (if available)
+                - track and realtime track (if available)
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="Trip">
+        <xs:annotation>
+            <xs:documentation>The element Trip contains all legs of the computed trip.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="12">
+                <xs:element ref="Leg"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.Trip"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="TripList">
+        <xs:annotation>
+            <xs:documentation>The trip list contains all found trips as a result of the trip request.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="Trip"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.TripList"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="OriginDestType">
+        <xs:attributeGroup ref="attlist.OriginDestType"/>
+    </xs:complexType>
+
+    <xs:attributeGroup name="attlist.Leg">
+        <xs:attribute name="name" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The attribute name specifies the name of the leg (e.g. "Bus 100").
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" use="required" ref="common:type"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="attlist.OriginDestType">
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Contains the name of the location.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The attribute type specifies the type of location.
+
+                    Valid values are ST (stop/station), ADR (address) or POI (point of interest).
+
+                    This attribute can be used to do some sort of classification in the user interface.
+
+                    For later trip requests it does not have any meaning.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="ST"/>
+                    <xs:enumeration value="ADR"/>
+                    <xs:enumeration value="POI"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="routeIdx" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation>
+                    Route index of a stop/station. Can be used as a reference of the stop/station in a journeyDetail
+                    response.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="time" type="xs:string" use="required" ref="common:time"/>
+        <xs:attribute name="date" type="xs:string" use="required" ref="common:date"/>
+        <xs:attribute name="track" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Track information, if available.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="rtTime" type="xs:string" ref="common:rtTime"/>
+        <xs:attribute name="rtDate" type="xs:string" ref="common:rtDate"/>
+        <xs:attribute name="rtTrack" type="xs:string" ref="common:rtTrack"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="attlist.Trip">
+        <xs:attribute name="alternative" type="xs:boolean" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    The type indicates whether this is an original connection or an realtime alternative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="valid" type="xs:boolean" default="true">
+            <xs:annotation>
+                <xs:documentation>
+                    The state indicates if the trip is still possible to ride based on the current realtime situation.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cancelled" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>This attribute gives information whether this journey is cancelled</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="attlist.TripList">
+        <xs:attribute name="error" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    If some problem occurs while calculating the trip you can find an error code here.
+
+                    Note:
+                    These error codes are not suitable for end users but only for reporting purposes.
+                    Most of the errors do not indicate a system failure but a reason,
+                    why no trip could be calculated for the request parameters.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+</xs:schema>
